@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GestiTaller</string>
+    <string name="add_client">Add client</string>
+    <string name="direction">Direction</string>
+    <string name="add_button">Add</string>
+    <string name="license_plate">License plate</string>
+    <string name="surname">Surname</string>
+    <string name="name">Name</string>
+    <string name="brand">Brand</string>
+    <string name="model">Mode</string>
+    <string name="client_capital">CLIENT</string>
+    <string name="bike_capital">BIKE</string>
+    <string name="order_capital">ORDER</string>
+    <string name="dni">DNI</string>
+    <string name="no_vip">Is not VIP</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="client">Client</string>
+    <string name="bike">Bike</string>
+    <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
+    <string name="vip">Is VIP</string>
+</resources>

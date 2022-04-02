@@ -1,3 +1,23 @@
+
 <resources>
     <string name="app_name">GestiTaller</string>
+    <string name="add_client">Añadir cliente</string>
+    <string name="direction">Dirección</string>
+    <string name="add_button">Añadir</string>
+    <string name="license_plate">Matrícula</string>
+    <string name="surname">Apellido</string>
+    <string name="name">Nombre</string>
+    <string name="brand">Marca</string>
+    <string name="model">Modelo</string>
+    <string name="client_capital">CLIENTE</string>
+    <string name="bike_capital">MOTO</string>
+    <string name="order_capital">ORDEN</string>
+    <string name="dni">DNI</string>
+    <string name="no_vip">No es VIP</string>
+    <string name="vip">Es VIP</string>
+    <string name="description">Descripción</string>
+    <string name="date">Fecha</string>
+    <string name="client">Cliente</string>
+    <string name="bike">Moto</string>
+    <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
 </resources>
