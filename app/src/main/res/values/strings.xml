@@ -19,5 +19,6 @@
     <string name="date">Fecha</string>
     <string name="client">Cliente</string>
     <string name="bike">Moto</string>
+    <string name="modify_capital">MODIFICAR</string>
     <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
 </resources>

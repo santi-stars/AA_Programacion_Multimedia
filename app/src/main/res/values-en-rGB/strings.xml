@@ -20,4 +20,5 @@
     <string name="bike">Bike</string>
     <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
     <string name="vip">Is VIP</string>
+    <string name="modify_capital">MODIFY</string>
 </resources>

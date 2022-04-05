@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Arrays;
+
 @Entity
 public class Bike {
 
@@ -75,5 +77,17 @@ public class Bike {
 
     public void setBikeImage(byte[] bikeImage) {
         this.bikeImage = bikeImage;
+    }
+
+    @Override
+    public String toString() {
+        return "Bike{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", clientId=" + clientId +
+                ", bikeImage=" + Arrays.toString(bikeImage) +
+                '}';
     }
 }

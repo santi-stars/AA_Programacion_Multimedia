@@ -134,7 +134,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/add_bike_button"
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"
