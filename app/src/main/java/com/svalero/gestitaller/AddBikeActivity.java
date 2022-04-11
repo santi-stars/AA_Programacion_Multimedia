@@ -27,7 +27,6 @@ import java.util.Arrays;
 public class AddBikeActivity extends AppCompatActivity {
 
     private Bike bike;
-    // private Client selectedClient;
 
     private Button addButton;
     private ImageView bikeImage;
@@ -51,6 +50,7 @@ public class AddBikeActivity extends AppCompatActivity {
         etLicensePlate = findViewById(R.id.license_plate_edittext_add_bike);
         clientSpinner = findViewById(R.id.client_spinner_add_bike);
         addButton = findViewById(R.id.add_bike_button);
+
         bike = new Bike(0, "", "", "", 0, null);
 
         clients = new ArrayList<>();
@@ -74,15 +74,17 @@ public class AddBikeActivity extends AppCompatActivity {
             bike.setId(intent.getIntExtra("id", 0));
             bike.setClientId(intent.getIntExtra("clientId", 0));
 
-            bikeImage.setImageBitmap(ImageUtils.getBitmap(intent.getByteArrayExtra("bike_image")));
+            if (intent.getByteArrayExtra("bike_image") != null) {
+                bikeImage.setImageBitmap(ImageUtils.getBitmap(intent.getByteArrayExtra("bike_image")));
+            }
             etBrand.setText(intent.getStringExtra("brand"));
             etModel.setText(intent.getStringExtra("model"));
             etLicensePlate.setText(intent.getStringExtra("license_plate"));
 
             addButton.setText(R.string.modify_capital);
-        } else {
+        }/* else {
             addButton.setText(R.string.add_button);
-        }
+        } */
     }
 
     public void addBike(View view) {
@@ -90,10 +92,7 @@ public class AddBikeActivity extends AppCompatActivity {
         bike.setBrand(etBrand.getText().toString().trim());
         bike.setModel(etModel.getText().toString().trim());
         bike.setLicensePlate(etLicensePlate.getText().toString().trim());
-        //        selectedClient = clients.get(clientSpinner.getSelectedItemPosition());
-        //bike.setClientId(selectedClient.getId());
         bike.setClientId(clients.get(clientSpinner.getSelectedItemPosition()).getId());
-
         bike.setBikeImage(ImageUtils.fromImageViewToByteArray(bikeImage));
 
         if ((bike.getBrand().equals("")) || (bike.getModel().equals("")) || (bike.getLicensePlate().equals(""))) {

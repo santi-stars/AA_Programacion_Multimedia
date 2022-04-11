@@ -114,6 +114,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
+                android:gravity="top|left"
                 android:inputType="textPersonName"
                 android:paddingHorizontal="6dp" />
 
@@ -142,7 +143,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:editable="false"
                 android:ems="10"
+                android:hint="dd/MM/yyyy"
                 android:inputType="date"
                 android:paddingHorizontal="6dp" />
 
@@ -151,6 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="selectDate"
                 app:srcCompat="@android:drawable/ic_menu_my_calendar" />
         </LinearLayout>
 
@@ -161,6 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:background="@drawable/custom_button"
+        android:onClick="addOrder"
         android:text="@string/add_button"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         tools:layout_editor_absoluteX="16dp" />

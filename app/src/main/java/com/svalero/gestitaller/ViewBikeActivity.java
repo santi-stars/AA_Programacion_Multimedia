@@ -58,6 +58,19 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
+    private void loadBikes() {
+
+        bikes.clear();
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "bike").allowMainThreadQueries()
+                .fallbackToDestructiveMigration().build();
+
+        bikes.addAll(db.bikeDao().getAll());
+
+        bikeArrayAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Método para cuando se crea el menu contextual, infle el menu con las opciones
      *
@@ -85,6 +98,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
         Intent intent = new Intent(this, AddBikeActivity.class);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
         final int itemSelected = info.position;
 
         switch (item.getItemId()) {
@@ -155,16 +169,6 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
                     }
                 });
         builder.create().show();
-    }
-
-    private void loadBikes() {
-        bikes.clear();
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "bike").allowMainThreadQueries()
-                .fallbackToDestructiveMigration().build();
-        bikes.addAll(db.bikeDao().getAll());
-
-        bikeArrayAdapter.notifyDataSetChanged();
     }
 
     public void addBike(View view) {

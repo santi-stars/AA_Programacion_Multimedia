@@ -40,7 +40,7 @@
         tools:layout_editor_absoluteX="8dp">
 
         <ImageButton
-            android:id="@+id/add_client_button"
+            android:id="@+id/add_client_button_menu"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
@@ -109,7 +109,7 @@
         tools:layout_editor_absoluteX="16dp">
 
         <ImageButton
-            android:id="@+id/add_bike_button"
+            android:id="@+id/add_bike_button_menu"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
@@ -152,7 +152,7 @@
         tools:layout_editor_absoluteX="0dp">
 
         <ImageButton
-            android:id="@+id/add_order_button"
+            android:id="@+id/add_order_button_menu"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"

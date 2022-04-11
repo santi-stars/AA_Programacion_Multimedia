@@ -4,20 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -33,19 +30,22 @@ import com.svalero.gestitaller.database.AppDatabase;
 import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.util.ImageUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class AddClientActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
+    private Client client;
     private boolean vip = false;
     private GoogleMap map;
     private Marker marker;
     private float[] clientPosition = {0, 0};
     private Switch vipSwitch;
     private ImageView clientImage;
+    private EditText etName;
+    private EditText etSurname;
+    private EditText etDni;
+    private Intent intent;
+    private Button addButton;
+
+    private boolean modifyClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,12 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         vipSwitch = findViewById(R.id.vip_switch_add_client);
         clientImage = findViewById(R.id.client_imageView);
+        etName = findViewById(R.id.name_edittext_add_client);
+        etSurname = findViewById(R.id.surname_edittext_add_client);
+        etDni = findViewById(R.id.dni_edittext_add_client);
+        addButton = findViewById(R.id.add_client_button);
+
+        client = new Client(0, "", "", "", false, 0, 0, null);
 
         // Permisos para la camara y almacenar en el dispositivo
         if (ContextCompat.checkSelfPermission(AddClientActivity.this,
@@ -73,47 +79,79 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
             mapFragment.getMapAsync(this);
         }
 
+        intent();
+    }
+
+    private void intent() {
+
+        intent = getIntent();
+        modifyClient = intent.getBooleanExtra("modify_client", false);
+        // Si se está editando el cliente, obtiene los datos del cliente y los pinta en el formulario
+        if (modifyClient) {
+            client.setId(intent.getIntExtra("id", 0));
+            client.setVip(intent.getBooleanExtra("vip", false));
+            client.setLatitude(intent.getFloatExtra("latitud", 0));
+            client.setLongitude(intent.getFloatExtra("longitud", 0));
+
+            if (intent.getByteArrayExtra("client_image") != null) {
+                clientImage.setImageBitmap(ImageUtils.getBitmap(intent.getByteArrayExtra("client_image")));
+            }
+            etName.setText(intent.getStringExtra("name"));
+            etSurname.setText(intent.getStringExtra("surname"));
+            etDni.setText(intent.getStringExtra("dni"));
+            vipSwitch.setChecked(intent.getBooleanExtra("vip", false));
+
+            addButton.setText(R.string.modify_capital);
+        }/* else {
+            addButton.setText(R.string.add_button);
+        } */
     }
 
     public void addClient(View view) {
-        EditText etName = findViewById(R.id.name_edittext_add_client);
-        EditText etSurname = findViewById(R.id.surname_edittext_add_client);
-        EditText etDni = findViewById(R.id.dni_edittext_add_client);
 
-        String name = etName.getText().toString().trim();
-        String surname = etSurname.getText().toString().trim();
-        String dni = etDni.getText().toString().trim();
-        byte[] clientImageByteArray = ImageUtils.fromImageViewToByteArray(clientImage);
+        client.setName(etName.getText().toString().trim());
+        client.setSurname(etSurname.getText().toString().trim());
+        client.setDni(etDni.getText().toString().trim());
+        client.setClientImage(ImageUtils.fromImageViewToByteArray(clientImage));
 
-        if ((name.equals("")) || (surname.equals("")) || (dni.equals(""))) {
+        if ((client.getName().equals("")) || (client.getSurname().equals("")) || (client.getDni().equals(""))) {
             Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
-        } else if (clientPosition[0] == 0) {
+        } else if (client.getLatitude() == 0 && client.getLongitude() == 0) {
             Toast.makeText(this, "Selecciona una posición en el mapa", Toast.LENGTH_SHORT).show();
         } else {
-            Client client = new Client(0, name, surname, dni, vip, clientPosition[0], clientPosition[1], clientImageByteArray);
 
             AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "client").allowMainThreadQueries().build();
-            db.clientDao().insert(client);
 
-            Toast.makeText(this, "Cliente añadido", Toast.LENGTH_SHORT).show();
+            if (modifyClient) {
+                Log.i("modifyed_client", client.toString());
+                modifyClient = false;
+                addButton.setText(R.string.add_button);
+                db.clientDao().update(client);
+                Toast.makeText(this, "Cliente modificado", Toast.LENGTH_SHORT).show();
+            } else {
+                client.setId(0);
+                Log.i("new_client", client.toString());
+                db.clientDao().insert(client);
+                Toast.makeText(this, "Cliente añadido", Toast.LENGTH_SHORT).show();
+            }
+
             clientImage.setImageResource(R.drawable.ic_menu_camera);
-            clientImageByteArray = ImageUtils.fromImageViewToByteArray(clientImage);
-
             etName.setText("");
             etSurname.setText("");
             etDni.setText("");
             vipSwitch.setChecked(false);
 
-            clientPosition[0] = 0;
-            clientPosition[1] = 0;
+            client.setVip(false);
+            client.setLatitude(0);
+            client.setLongitude(0);
             marker.remove();
 
         }
     }
 
     /**
-     * Cambia el texto del switch y el valor de la variable booleana VIP, que define si es VIP o no
+     * Cambia el texto del switch y el valor booleano VIP del cliente
      *
      * @param view
      */
@@ -121,10 +159,10 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         if (vipSwitch.isChecked()) {
             vipSwitch.setText(R.string.vip);
-            vip = true;
+            client.setVip(true);
         } else {
             vipSwitch.setText(R.string.no_vip);
-            vip = false;
+            client.setVip(false);
         }
 
     }
@@ -161,6 +199,9 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
         map = googleMap;    // Asignamos el mapa pasado por parámetro a nuestra variable de tipo GoogleMap
         googleMap.setOnMapClickListener(this);  // Establecemos un listener de click sencillo para el mapa
 
+        if (client.getLatitude() != 0 && client.getLongitude() != 0) {
+            onMapClick(new LatLng(client.getLatitude(), client.getLongitude()));
+        }
     }
 
     @Override
@@ -171,8 +212,8 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         marker = map.addMarker(new MarkerOptions().position(latLng));
-        clientPosition[0] = (float) latLng.latitude;    // Asignamos las coordenadas del marker a la
-        clientPosition[1] = (float) latLng.longitude;   // posición (Dirección) del cliente
+        client.setLatitude((float) latLng.latitude);    // Asignamos las coordenadas del marker a la
+        client.setLongitude((float) latLng.longitude);   // dirección del cliente
 
     }
 }

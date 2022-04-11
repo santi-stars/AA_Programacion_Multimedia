@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Arrays;
+
 @Entity
 public class Client {
 
@@ -97,5 +99,19 @@ public class Client {
 
     public void setClientImage(byte[] clientImage) {
         this.clientImage = clientImage;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", dni='" + dni + '\'' +
+                ", vip=" + vip +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", clientImage=" + Arrays.toString(clientImage) +
+                '}';
     }
 }
