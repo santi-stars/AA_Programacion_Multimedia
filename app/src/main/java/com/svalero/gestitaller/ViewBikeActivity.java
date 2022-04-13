@@ -23,6 +23,8 @@ import com.svalero.gestitaller.domain.Client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ViewBikeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -49,7 +51,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
         bikes = new ArrayList<>();
         ListView bikesListView = findViewById(R.id.bike_lisview);
         registerForContextMenu(bikesListView);
-        bikeArrayAdapter = new BikeAdapter(this, bikes);
+            bikeArrayAdapter = new BikeAdapter(this, bikes);
 
         loadBikes();
 
@@ -67,7 +69,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
                 .fallbackToDestructiveMigration().build();
 
         bikes.addAll(db.bikeDao().getAll());
-
+        Collections.sort(bikes);
         bikeArrayAdapter.notifyDataSetChanged();
     }
 
@@ -146,7 +148,6 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
             default:
                 return super.onContextItemSelected(item);
         }
-
     }
 
     private void deleteBike(AdapterView.AdapterContextMenuInfo info) {

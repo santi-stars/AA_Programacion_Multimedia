@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.svalero.gestitaller.database.AppDatabase;
@@ -22,17 +25,20 @@ import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.domain.Order;
 import com.svalero.gestitaller.util.ImageUtils;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddOrderActivity extends AppCompatActivity {
 
     private Spinner clientSpinner;
     private Spinner bikeSpinner;
     private EditText etDescription;
-    private EditText etDate;
+    private TextView tvDate;
     private Button addButton;
+    private Intent intent;
 
     private Order order;
     private ArrayList<Client> clients;
@@ -47,7 +53,7 @@ public class AddOrderActivity extends AppCompatActivity {
         clientSpinner = findViewById(R.id.client_spinner_add_order);
         bikeSpinner = findViewById(R.id.bike_spinner_add_order);
         etDescription = findViewById(R.id.description_edittext_add_order);
-        etDate = findViewById(R.id.date_edittext_add_order);
+        tvDate = findViewById(R.id.date_textlabel_add_order);
         addButton = findViewById(R.id.add_order_button);
 
         order = new Order(0, null, 0, 0, "");
@@ -55,6 +61,7 @@ public class AddOrderActivity extends AppCompatActivity {
         clients = new ArrayList<>();
         bikes = new ArrayList<>();
         rellenarSpinners(0);
+        intent();
 
         clientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -95,17 +102,41 @@ public class AddOrderActivity extends AppCompatActivity {
                 if ((month + 1) < 10) {
                     stringMonth = "0" + stringMonth;
                 }
-                etDate.setText(dayOfMonth + "/" + stringMonth + "/" + year);
+                tvDate.setText(dayOfMonth + "/" + stringMonth + "/" + year);
             }
         }, year, month, day);
         datePickerDialog.show();
+    }
+
+    private void intent() {
+
+        intent = getIntent();
+        modifyOrder = intent.getBooleanExtra("modify_order", false);
+        // Si se está editando la moto, obtiene los datos de la moto y los pinta en el formulario
+        if (modifyOrder) {
+            order.setId(intent.getIntExtra("id", 0));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(String.valueOf(intent.getStringExtra("date")));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            sdf.applyPattern("dd/MM/yyyy");
+
+            tvDate.setText(sdf.format(date));
+            etDescription.setText(intent.getStringExtra("description"));
+
+            addButton.setText(R.string.modify_capital);
+        }
     }
 
     public void addOrder(View view) {
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");  // Para indicar el formato
 
-        order.setDate(LocalDate.parse(etDate.getText().toString().trim(), formato));
+        order.setDate(LocalDate.parse(tvDate.getText().toString().trim(), formato));
         order.setDescription(etDescription.getText().toString().trim());
 
         if (bikeSpinner.getCount() == 0) {
@@ -118,8 +149,6 @@ public class AddOrderActivity extends AppCompatActivity {
 
             AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "order").allowMainThreadQueries().build();
-
-            modifyOrder = false;          // BORRAR
 
             if (modifyOrder) {
                 Log.i("modifyed_order", order.toString());
@@ -135,11 +164,16 @@ public class AddOrderActivity extends AppCompatActivity {
             }
 
             etDescription.setText("");
-            etDate.setText("");
+            tvDate.setText("");
 
         }
     }
 
+    /**
+     * Rellena los spinner para añadirlos a la orden
+     * @param idClient 0 rellena el spinner de clients con todos ellos,
+     *                 > 0 rellena el spinner de bikes con las motos del id enviado por parametro
+     */
     private void rellenarSpinners(int idClient) {
 
         if (idClient == 0) {
@@ -151,7 +185,7 @@ public class AddOrderActivity extends AppCompatActivity {
                     .fallbackToDestructiveMigration().build();
             clients.addAll(dbClient.clientDao().getAll());
 
-            // Crea un array del tamaño de la lista de clientes y motos
+            // Crea un array del tamaño de la lista de clientes
             String[] arrayClientSpinner = new String[clients.size()];
 
             int i = 0;      // Rellena el spinner con el nombre y apellido de los clientes

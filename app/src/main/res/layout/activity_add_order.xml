@@ -129,7 +129,7 @@
 
             <TextView
                 android:id="@+id/date_textview_add_order"
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
@@ -138,21 +138,20 @@
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/date_edittext_add_order"
+            <TextView
+                android:id="@+id/date_textlabel_add_order"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:editable="false"
                 android:ems="10"
-                android:hint="dd/MM/yyyy"
-                android:inputType="date"
-                android:paddingHorizontal="6dp" />
+                android:gravity="center"
+                android:paddingHorizontal="6dp"
+                android:textSize="24sp" />
 
             <ImageView
                 android:id="@+id/calendar_imageview_add_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:onClick="selectDate"
                 app:srcCompat="@android:drawable/ic_menu_my_calendar" />

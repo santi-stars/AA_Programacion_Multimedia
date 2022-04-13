@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import java.util.Arrays;
 
 @Entity
-public class Bike {
+public class Bike implements Comparable<Bike> {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -21,6 +21,9 @@ public class Bike {
     private int clientId;
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] bikeImage;
+
+    public Bike() {
+    }
 
     public Bike(int id, String brand, String model, String licensePlate, int clientId, byte[] bikeImage) {
         this.id = id;
@@ -90,4 +93,10 @@ public class Bike {
                 ", bikeImage=" + Arrays.toString(bikeImage) +
                 '}';
     }
+
+    @Override
+    public int compareTo(Bike o) {
+        return brand.compareTo(o.brand);
+    }
 }
+

@@ -17,7 +17,7 @@ public interface BikeDao {
     List<Bike> getAll();
 
     @Query("SELECT * FROM bike WHERE id = :id")
-    List<Bike> getBikesById(int id);
+    Bike getBikeById(int id);
 
     @Query("SELECT * FROM bike WHERE clientId = :clientId")
     List<Bike> getBikesByClientId(int clientId);

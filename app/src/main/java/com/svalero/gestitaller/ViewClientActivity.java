@@ -23,6 +23,8 @@ import com.svalero.gestitaller.domain.Client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ViewClientActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -68,6 +70,20 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
 
         clients.addAll(db.clientDao().getAll());
 
+        int x = 2;
+        Collections.sort(clients, new Comparator<Client>() {
+            @Override
+            public int compare(Client o1, Client o2) {
+                switch (x) {
+                    case 1:
+                        return o1.getName().compareToIgnoreCase(o2.getName());
+                    case 2:
+                        return o1.getSurname().compareToIgnoreCase(o2.getSurname());
+                    default:
+                        return new Integer(o1.getId()).compareTo(o2.getId());
+                }
+            }
+        });
         clientArrayAdapter.notifyDataSetChanged();
 
     }
@@ -80,7 +96,8 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
      * @param menuInfo
      */
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
+            menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         Log.i("inflate", "NO infla");

@@ -26,6 +26,9 @@ public class Client {
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] clientImage;
 
+    public Client() {
+    }
+
     public Client(int id, String name, String surname, String dni, boolean vip, float latitude, float longitude, byte[] clientImage) {
         this.id = id;
         this.name = name;

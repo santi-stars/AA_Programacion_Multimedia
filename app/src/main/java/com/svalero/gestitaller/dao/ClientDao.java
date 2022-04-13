@@ -17,7 +17,7 @@ public interface ClientDao {
     List<Client> getAll();
 
     @Query("SELECT * FROM client WHERE id = :id")
-    List<Client> getClientsById(int id);
+    Client getClientById(int id);
 
     @Insert
     void insert(Client client);

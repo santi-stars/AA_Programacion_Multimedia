@@ -82,9 +82,7 @@ public class AddBikeActivity extends AppCompatActivity {
             etLicensePlate.setText(intent.getStringExtra("license_plate"));
 
             addButton.setText(R.string.modify_capital);
-        }/* else {
-            addButton.setText(R.string.add_button);
-        } */
+        }
     }
 
     public void addBike(View view) {

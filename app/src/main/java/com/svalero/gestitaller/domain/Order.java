@@ -10,7 +10,7 @@ import com.svalero.gestitaller.database.TimestampConverter;
 import java.time.LocalDate;
 
 @Entity
-public class Order {
+public class Order implements Comparable<Order> {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -70,5 +70,21 @@ public class Order {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", date=" + date +
+                ", clientId=" + clientId +
+                ", bikeId=" + bikeId +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Order o) {
+        return date.compareTo(o.date);
     }
 }
