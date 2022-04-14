@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/drawable/custom_button.xml" value="0.1365" />
+        <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/drawable/ic_launcher_background.xml" value="0.113" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout-land/activity_add_client.xml" value="0.24735449735449735" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout-land/activity_main.xml" value="0.24735449735449735" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/activity_add_bike.xml" value="0.2527027027027027" />
@@ -17,6 +18,8 @@
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/bike_adapter.xml" value="0.23984608807182556" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/client.xml" value="0.23984608807182556" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/client_and_bike_adapter.xml" value="0.16075245831551946" />
+        <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/fragment_blank.xml" value="0.23984608807182556" />
+        <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/layout/fragment_detail.xml" value="0.23984608807182556" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/menu/listview_menu.xml" value="0.2020389249304912" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/menu/listview_menu2.xml" value="0.16075245831551946" />
         <entry key="..\:/Users/santi/AndroidStudioProjects/AA_Programacion_Multimedia/GestiTaller/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1325" />

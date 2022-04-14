@@ -3,6 +3,7 @@ package com.svalero.gestitaller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import android.content.DialogInterface;
@@ -12,7 +13,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.svalero.gestitaller.adapters.OrderAdapter;
@@ -27,7 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class ViewOrderActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class ViewOrderActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, DetailFragment.closeDetails {
 
     public ArrayList<OrderDTO> ordersDTOArrayList;
     public ArrayList<Order> ordersArrayList;
@@ -35,6 +38,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
     private OrderDTO orderDTO;
     private Bike bike;
     private Client client;
+    private FrameLayout frameLayout;
 
 
     @Override
@@ -45,6 +49,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         bike = new Bike();
         client = new Client();
         ordersArrayList = new ArrayList<>();
+        frameLayout = findViewById(R.id.frame_layout);
 
         orderList();
 
@@ -174,9 +179,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
                 return true;
 
             case R.id.detail_menu:                      // Detalles de la moto
-
-                // Todo FALTA usar un fragment para mostrar una ficha con los detalles de la moto
-
+                showDetails(itemSelected);
                 return true;
 
             case R.id.add_menu:                         // Añadir moto
@@ -215,6 +218,29 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
 
     }
 
+    private void showDetails(int position) {
+
+        OrderDTO orderDTO = ordersDTOArrayList.get(position);
+
+        Bundle datos = new Bundle();
+        datos.putByteArray("bike_image", orderDTO.getBikeImageOrder());
+        datos.putString("date", String.valueOf(orderDTO.getDate()));
+        datos.putString("name", orderDTO.getClientNameSurname());
+        datos.putString("model", orderDTO.getBikeBrandModel());
+        datos.putString("description", orderDTO.getDescription());
+
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(datos);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.order_detail, detailFragment)
+                .commit();
+
+        frameLayout.setVisibility(View.VISIBLE);
+    }
+
+
     public void addOrder(View view) {
         Intent intent = new Intent(this, AddOrderActivity.class);
         startActivity(intent);
@@ -222,6 +248,11 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        showDetails(position);
+    }
 
+    @Override
+    public void hiddeDetails() {
+        frameLayout.setVisibility(View.GONE);
     }
 }

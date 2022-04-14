@@ -1,4 +1,3 @@
-
 <resources>
     <string name="app_name">GestiTaller</string>
     <string name="add_client">Añadir cliente</string>
@@ -21,4 +20,6 @@
     <string name="bike">Moto</string>
     <string name="modify_capital">MODIFICAR</string>
     <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
