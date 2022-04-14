@@ -80,7 +80,7 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
                     case 2:
                         return o1.getSurname().compareToIgnoreCase(o2.getSurname());
                     default:
-                        return new Integer(o1.getId()).compareTo(o2.getId());
+                        return String.valueOf(o1.getId()).compareTo(String.valueOf(o2.getId()));
                 }
             }
         });

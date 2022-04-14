@@ -102,10 +102,16 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
             ordersDTOArrayList.add(orderDTO);
         }
 
+        int x = 2;
         Collections.sort(ordersDTOArrayList, new Comparator<OrderDTO>() {
             @Override
             public int compare(OrderDTO o1, OrderDTO o2) {
-                return 0;
+                switch (x) {
+                    case 1:
+                        return o1.getBikeBrandModel().compareToIgnoreCase(o2.getBikeBrandModel());
+                    default:
+                        return String.valueOf(o1.getDate()).compareTo(String.valueOf(o2.getDate()));
+                }
             }
         });
 
@@ -144,7 +150,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
 
         switch (item.getItemId()) {
             case R.id.modify_menu:                      // Modificar moto
-                Order order= ordersArrayList.get(itemSelected);
+                Order order = ordersArrayList.get(itemSelected);
                 intent.putExtra("modify_order", true);
 
                 Log.i("case_menu_id", String.valueOf(order.getId()));

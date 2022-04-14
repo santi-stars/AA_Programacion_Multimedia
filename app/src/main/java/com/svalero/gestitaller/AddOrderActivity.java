@@ -141,7 +141,7 @@ public class AddOrderActivity extends AppCompatActivity {
 
         if (bikeSpinner.getCount() == 0) {
             Toast.makeText(this, "Selecciona una moto", Toast.LENGTH_SHORT).show();
-        } else if ((order.getDescription().equals("")) || (order.getDate().equals(""))) {
+        } else if ((order.getDescription().equals("")) || (String.valueOf(order.getDate()).equals(""))) {
             Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
         } else {
             order.setClientId(clients.get(clientSpinner.getSelectedItemPosition()).getId());
