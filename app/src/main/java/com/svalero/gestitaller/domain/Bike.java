@@ -25,6 +25,17 @@ public class Bike implements Comparable<Bike> {
     public Bike() {
     }
 
+    public Bike(Bike bike) {
+        this.id = bike.getId();
+        this.brand = bike.getBrand();
+        this.model = bike.getModel();
+        this.licensePlate = bike.getLicensePlate();
+        this.clientId = bike.getClientId();
+        this.bikeImage = bike.getBikeImage();
+    }
+
+
+
     public Bike(int id, String brand, String model, String licensePlate, int clientId, byte[] bikeImage) {
         this.id = id;
         this.brand = brand;

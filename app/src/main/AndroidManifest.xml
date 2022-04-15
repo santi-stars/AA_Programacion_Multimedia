@@ -15,26 +15,32 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:allowBackup="true"
+
+
+    android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_logo"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.GestiTaller">
+        android:theme="@style/Theme.GestiTaller.NoActionBar"
+        android:supportsRtl="true" >
+
         <activity
             android:name=".ViewBikeActivity"
+            android:theme="@style/Theme.GestiTaller"
             android:exported="false" />
         <activity
             android:name=".AddBikeActivity"
             android:exported="false" />
         <activity
             android:name=".ViewOrderActivity"
+            android:theme="@style/Theme.GestiTaller"
             android:exported="false" />
         <activity
             android:name=".AddOrderActivity"
             android:exported="false" />
         <activity
             android:name=".ViewClientActivity"
+            android:theme="@style/Theme.GestiTaller"
             android:exported="false" />
         <activity
             android:name=".AddClientActivity"

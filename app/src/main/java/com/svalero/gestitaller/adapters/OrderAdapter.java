@@ -39,16 +39,16 @@ public class OrderAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.client_and_bike_adapter, null);
         ImageView orderBikeImage = convertView.findViewById(R.id.client_bike_item_imageView);
         TextView orderDateAndBikeModel = convertView.findViewById(R.id.client_bike_tv1);
-        TextView orderDescription = convertView.findViewById(R.id.client_bike_tv2);
+        TextView orderLicensePlateAndDescription = convertView.findViewById(R.id.client_bike_tv2);
 
         orderDateAndBikeModel.setTextSize(22);
-        orderDescription.setTextSize(18);
+        orderLicensePlateAndDescription.setTextSize(18);
 
         if (orderDTO.getBikeImageOrder() != null) {  // Valido si no es null la foto, si no sale fallo nullpoint...
             orderBikeImage.setImageBitmap(ImageUtils.getBitmap(orderDTO.getBikeImageOrder()));
         }
         orderDateAndBikeModel.setText(orderDTO.getDate() + " || " + orderDTO.getBikeBrandModel());
-        orderDescription.setText(orderDTO.getDescription());
+        orderLicensePlateAndDescription.setText(orderDTO.getBikeLicensePlate() + " || " + orderDTO.getDescription());
 
 
         return convertView;

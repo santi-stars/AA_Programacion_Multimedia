@@ -3,20 +3,22 @@ package com.svalero.gestitaller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.core.view.MenuItemCompat;
 import androidx.room.Room;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.svalero.gestitaller.adapters.OrderAdapter;
 import com.svalero.gestitaller.database.AppDatabase;
@@ -24,22 +26,30 @@ import com.svalero.gestitaller.domain.Bike;
 import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.domain.Order;
 import com.svalero.gestitaller.domain.dto.OrderDTO;
+import com.svalero.gestitaller.util.DateUtils;
+import com.svalero.gestitaller.util.ImageUtils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class ViewOrderActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, DetailFragment.closeDetails {
 
     public ArrayList<OrderDTO> ordersDTOArrayList;
     public ArrayList<Order> ordersArrayList;
-    public OrderAdapter orderArrayAdapter;
+    public ArrayList<Bike> bikesArrayList;
+    public ArrayList<Client> clientsArrayList;
+    public OrderAdapter orderDTOArrayAdapter;
     private OrderDTO orderDTO;
     private Bike bike;
     private Client client;
+    private Order order;
     private FrameLayout frameLayout;
-
+    private String orderBy;
+    private final String DEFAULT_STRING = "";
+    private AppDatabase dbBike, dbClient, dbOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +59,19 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         bike = new Bike();
         client = new Client();
         ordersArrayList = new ArrayList<>();
+        ordersDTOArrayList = new ArrayList<>();
         frameLayout = findViewById(R.id.frame_layout);
+        orderBy = DEFAULT_STRING;
+
+        dbBike = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "bike").allowMainThreadQueries()
+                .fallbackToDestructiveMigration().build();
+        dbClient = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "client").allowMainThreadQueries()
+                .fallbackToDestructiveMigration().build();
+        dbOrder = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "order").allowMainThreadQueries()
+                .fallbackToDestructiveMigration().build();
 
         orderList();
 
@@ -62,65 +84,134 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         orderList();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.order_actionbar, menu);
+        final MenuItem searchItem = menu.findItem(R.id.app_bar_order_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                findBy(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                findBy(newText.trim());
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void orderList() {
 
-        ordersDTOArrayList = new ArrayList<>();
         ListView ordersListView = findViewById(R.id.order_listview);
         registerForContextMenu(ordersListView);
-        orderArrayAdapter = new OrderAdapter(this, ordersDTOArrayList);
 
-        loadOrders();
+        orderDTOArrayAdapter = new OrderAdapter(this, ordersDTOArrayList);
 
-        ordersListView.setAdapter(orderArrayAdapter);
+        findBy(DEFAULT_STRING);
+
+        ordersListView.setAdapter(orderDTOArrayAdapter);
         ordersListView.setOnItemClickListener(this);
     }
 
-    private void loadOrders() {
+    private void findBy(String query) {
+        loadOrdersDTO();
+        orderDTO = new OrderDTO();
+        // TODO spinner con las opciones para buscar    COMPROBAR!!!
+        String j = "date";
+        switch (j) {
+            case "date":
+                ordersDTOArrayList.removeIf
+                        (orderDTO -> (!String.valueOf(orderDTO.getDate()).contains(query)));
+                break;
+            case "clien_name":
+                ordersDTOArrayList.removeIf
+                        (orderDTO -> (!orderDTO.getClientNameSurname().contains(query)));
+                break;
+            case "bike_model":
+                ordersDTOArrayList.removeIf
+                        (orderDTO -> (!orderDTO.getBikeBrandModel().contains(query)));
+                break;
+            case "license_plate":
+                ordersDTOArrayList.removeIf
+                        (orderDTO -> (!orderDTO.getBikeLicensePlate().contains(query)));
+                break;
+        }
+        orderBy(orderBy);
+    }
 
+    private void orderBy(String orderBy) {
+        this.orderBy = orderBy;
+
+        Collections.sort(ordersDTOArrayList, new Comparator<OrderDTO>() {
+            @Override
+            public int compare(OrderDTO o1, OrderDTO o2) {
+                switch (orderBy) {
+                    case "date":
+                        return String.valueOf(o1.getDate()).compareToIgnoreCase(String.valueOf(o2.getDate()));
+                    case "client_name":
+                        return o1.getClientNameSurname().compareToIgnoreCase(o2.getClientNameSurname());
+                    case "license_plate":
+                        return o1.getBikeLicensePlate().compareToIgnoreCase(o2.getBikeLicensePlate());
+                    case "bike_model":
+                        return o1.getBikeBrandModel().compareToIgnoreCase(o2.getBikeBrandModel());
+                    default:
+                        return String.valueOf(o1.getId()).compareTo(String.valueOf(o2.getId()));
+                }
+            }
+        });
+        orderDTOArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.order_by_default_item:
+                orderBy("");
+                return true;
+            case R.id.order_by_date_item:
+                orderBy("date");
+                return true;
+            case R.id.order_by_client_item:
+                orderBy("client_name");
+                return true;
+            case R.id.order_by_license_plate_item:
+                orderBy("license_plate");
+                return true;
+            case R.id.order_by_bike_model_item:
+                orderBy("bike_model");
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void loadOrdersDTO() {
         ordersDTOArrayList.clear();
         ordersArrayList.clear();
-
-        AppDatabase dbBike = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "bike").allowMainThreadQueries()
-                .fallbackToDestructiveMigration().build();
-        AppDatabase dbClient = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "client").allowMainThreadQueries()
-                .fallbackToDestructiveMigration().build();
-        AppDatabase dbOrder = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "order").allowMainThreadQueries()
-                .fallbackToDestructiveMigration().build();
 
         ordersArrayList.addAll(dbOrder.orderDao().getAll());
 
         for (Order order : ordersArrayList) {
             client = dbClient.clientDao().getClientById(order.getClientId());
             bike = dbBike.bikeDao().getBikeById(order.getBikeId());
-            orderDTO = new OrderDTO(0, null, "", "", null, "");
+            orderDTO = new OrderDTO();
 
             orderDTO.setId(order.getId());
             orderDTO.setDate(order.getDate());
             orderDTO.setClientNameSurname(client.getName() + " " + client.getSurname());
             orderDTO.setBikeBrandModel(bike.getBrand() + " " + bike.getModel());
+            orderDTO.setBikeLicensePlate(bike.getLicensePlate());
             orderDTO.setBikeImageOrder(bike.getBikeImage());
             orderDTO.setDescription(order.getDescription());
 
             ordersDTOArrayList.add(orderDTO);
         }
-
-        int x = 2;
-        Collections.sort(ordersDTOArrayList, new Comparator<OrderDTO>() {
-            @Override
-            public int compare(OrderDTO o1, OrderDTO o2) {
-                switch (x) {
-                    case 1:
-                        return o1.getBikeBrandModel().compareToIgnoreCase(o2.getBikeBrandModel());
-                    default:
-                        return String.valueOf(o1.getDate()).compareTo(String.valueOf(o2.getDate()));
-                }
-            }
-        });
-
-        orderArrayAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -161,7 +252,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
                 Log.i("case_menu_id", String.valueOf(order.getId()));
                 intent.putExtra("id", order.getId());
 
-                Log.i("case_menu_imagen", String.valueOf(order.getDate()));
+                Log.i("case_menu_date", String.valueOf(order.getDate()));
                 intent.putExtra("date", String.valueOf(order.getDate()));
 
                 Log.i("case_menu_description", order.getDescription());

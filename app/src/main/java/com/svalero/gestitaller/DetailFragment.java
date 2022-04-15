@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ public class DetailFragment extends Fragment {
     private String clientName;
     private String bikeModel;
     private String description;
+    private final String VIEW_BIKE_ACTIVITY = "com.svalero.gestitaller.ViewOrderActivity@24393";
+    private final String VIEW_CLIENT_ACTIVITY = "com.svalero.gestitaller.ViewOrderActivity@24393f";
+    private final String VIEW_ORDER_ACTIVITY = "com.svalero.gestitaller.ViewOrderActivity@24393f0";
 
     public FloatingActionButton closeButton;
 
@@ -32,23 +36,6 @@ public class DetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param date        Parameter 1.
-     * @param description Parameter 2.
-     * @return A new instance of fragment DetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(String date, String description) {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString("date", date);
-        args.putString("description", description);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +53,19 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
+        Activity thisActivity = getActivity();
+        Log.i("activity", thisActivity.toString());
+        View detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
+
+        switch (thisActivity.toString()) {
+            case VIEW_BIKE_ACTIVITY:
+                // TODO crear un layout para cada fragment de detalles o borrar el swich
+            case VIEW_CLIENT_ACTIVITY:
+                // TODO crear un layout para cada fragment de detalles o borrar el swich
+            case VIEW_ORDER_ACTIVITY:
+                detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
+
+        }
 
         closeButton = detailView.findViewById(R.id.close_detail_button);
 

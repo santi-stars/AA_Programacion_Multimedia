@@ -24,6 +24,9 @@ public class Order implements Comparable<Order> {
     @ColumnInfo
     private String description;
 
+    public Order() {
+    }
+
     public Order(int id, LocalDate date, int clientId, int bikeId, String description) {
         this.id = id;
         this.date = date;

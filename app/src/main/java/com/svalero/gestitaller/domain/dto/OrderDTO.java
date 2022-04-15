@@ -10,14 +10,19 @@ public class OrderDTO implements Comparable {
     private LocalDate date; // Order
     private String clientNameSurname;  // Client
     private String bikeBrandModel;    // Client
+    private String bikeLicensePlate;    // Bike
     private byte[] bikeImageOrder;   // Bike
     private String description; // Order
 
-    public OrderDTO(int id, LocalDate date, String clientNameSurname, String bikeBrandModel, byte[] bikeImageOrder, String description) {
+    public OrderDTO() {
+    }
+
+    public OrderDTO(int id, LocalDate date, String clientNameSurname, String bikeBrandModel, String bikeLicensePlate, byte[] bikeImageOrder, String description) {
         this.id = id;
         this.date = date;
         this.clientNameSurname = clientNameSurname;
         this.bikeBrandModel = bikeBrandModel;
+        this.bikeLicensePlate = bikeLicensePlate;
         this.bikeImageOrder = bikeImageOrder;
         this.description = description;
     }
@@ -98,5 +103,13 @@ public class OrderDTO implements Comparable {
                 ", description='" + description + '\'' +
                 ", bikeImageOrder=" + Arrays.toString(bikeImageOrder) +
                 '}';
+    }
+
+    public String getBikeLicensePlate() {
+        return bikeLicensePlate;
+    }
+
+    public void setBikeLicensePlate(String bikeLicensePlate) {
+        this.bikeLicensePlate = bikeLicensePlate;
     }
 }

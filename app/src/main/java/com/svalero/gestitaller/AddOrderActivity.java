@@ -23,11 +23,9 @@ import com.svalero.gestitaller.database.AppDatabase;
 import com.svalero.gestitaller.domain.Bike;
 import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.domain.Order;
-import com.svalero.gestitaller.util.ImageUtils;
+import com.svalero.gestitaller.util.DateUtils;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -112,20 +110,11 @@ public class AddOrderActivity extends AppCompatActivity {
 
         intent = getIntent();
         modifyOrder = intent.getBooleanExtra("modify_order", false);
-        // Si se está editando la moto, obtiene los datos de la moto y los pinta en el formulario
-        if (modifyOrder) {
+
+        if (modifyOrder) {  // Si se edita una moto, obtiene sus datos y los pinta en el formulario
             order.setId(intent.getIntExtra("id", 0));
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = null;
-            try {
-                date = sdf.parse(String.valueOf(intent.getStringExtra("date")));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            sdf.applyPattern("dd/MM/yyyy");
-
-            tvDate.setText(sdf.format(date));
+            tvDate.setText(String.valueOf(DateUtils.fromMyDateFormatStringToLocalDate
+                    (intent.getStringExtra("date"))));
             etDescription.setText(intent.getStringExtra("description"));
 
             addButton.setText(R.string.modify_capital);
@@ -134,9 +123,7 @@ public class AddOrderActivity extends AppCompatActivity {
 
     public void addOrder(View view) {
 
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");  // Para indicar el formato
-
-        order.setDate(LocalDate.parse(tvDate.getText().toString().trim(), formato));
+        order.setDate(DateUtils.fromMyDateFormatStringToLocalDate(tvDate.getText().toString().trim()));
         order.setDescription(etDescription.getText().toString().trim());
 
         if (bikeSpinner.getCount() == 0) {
@@ -171,6 +158,7 @@ public class AddOrderActivity extends AppCompatActivity {
 
     /**
      * Rellena los spinner para añadirlos a la orden
+     *
      * @param idClient 0 rellena el spinner de clients con todos ellos,
      *                 > 0 rellena el spinner de bikes con las motos del id enviado por parametro
      */

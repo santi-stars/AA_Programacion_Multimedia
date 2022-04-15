@@ -33,14 +33,14 @@ public class ClientAdapter extends BaseAdapter {
 
         convertView = inflater.inflate(R.layout.client_and_bike_adapter, null);
         ImageView clientImage = (ImageView) convertView.findViewById(R.id.client_bike_item_imageView);
-        TextView clientNameTv = convertView.findViewById(R.id.client_bike_tv1);
-        TextView clientSurnameTv = convertView.findViewById(R.id.client_bike_tv2);
+        TextView clientNameAndSurnameTv = convertView.findViewById(R.id.client_bike_tv1);
+        TextView clientDniTv = convertView.findViewById(R.id.client_bike_tv2);
 
         if (client.getClientImage() != null) {  // Valido si no es null la foto, si no sale fallo nullpoint...
             clientImage.setImageBitmap(ImageUtils.getBitmap(client.getClientImage()));
         }
-        clientNameTv.setText(client.getName());
-        clientSurnameTv.setText(client.getSurname());
+        clientNameAndSurnameTv.setText(client.getName() + " " + client.getSurname());
+        clientDniTv.setText(client.getDni());
 
         return convertView;
     }

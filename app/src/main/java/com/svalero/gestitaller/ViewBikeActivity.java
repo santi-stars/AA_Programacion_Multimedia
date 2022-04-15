@@ -3,6 +3,7 @@ package com.svalero.gestitaller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.room.Room;
 
 import android.content.DialogInterface;
@@ -10,10 +11,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.svalero.gestitaller.adapters.BikeAdapter;
 import com.svalero.gestitaller.adapters.ClientAdapter;
@@ -30,11 +33,15 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
     public ArrayList<Bike> bikes;
     public BikeAdapter bikeArrayAdapter;
+    private String orderBy;
+    private final String DEFAULT_STRING="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_bike);
+        bikes = new ArrayList<>();
+        orderBy = DEFAULT_STRING;
 
         bikeList();
     }
@@ -46,30 +53,86 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
         bikeList();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bike_actionbar, menu);
+        final MenuItem searchItem = menu.findItem(R.id.app_bar_bike_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                findBy(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                findBy(newText.trim());
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void bikeList() {
 
-        bikes = new ArrayList<>();
         ListView bikesListView = findViewById(R.id.bike_lisview);
         registerForContextMenu(bikesListView);
-            bikeArrayAdapter = new BikeAdapter(this, bikes);
 
-        loadBikes();
+        bikeArrayAdapter = new BikeAdapter(this, bikes);
+
+        findBy(DEFAULT_STRING);
 
         bikesListView.setAdapter(bikeArrayAdapter);
         bikesListView.setOnItemClickListener(this);
 
     }
 
-    private void loadBikes() {
-
+    private void findBy(String query) {
         bikes.clear();
-
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "bike").allowMainThreadQueries()
                 .fallbackToDestructiveMigration().build();
 
-        bikes.addAll(db.bikeDao().getAll());
-        Collections.sort(bikes);
+        if (query.equalsIgnoreCase(DEFAULT_STRING)) {
+            bikes.addAll(db.bikeDao().getAll());
+        } else {
+            // TODO spinner con las opciones para buscar
+            int j = 1;
+            switch (j) {
+                case 1:
+                    bikes.addAll(db.bikeDao().getByBrandString("%" + query + "%"));
+                    break;
+                case 2:
+                    bikes.addAll(db.bikeDao().getByModelString("%" + query + "%"));
+                    break;
+                case 3:
+                    bikes.addAll(db.bikeDao().getByLicensePlateString("%" + query + "%"));
+                    break;
+            }
+        }
+        orderBy(orderBy);
+    }
+
+    private void orderBy(String orderBy) {
+        this.orderBy = orderBy;
+
+        Collections.sort(bikes, new Comparator<Bike>() {
+            @Override
+            public int compare(Bike o1, Bike o2) {
+                switch (orderBy) {
+                    case "brand":
+                        return o1.getBrand().compareToIgnoreCase(o2.getBrand());
+                    case "model":
+                        return o1.getModel().compareToIgnoreCase(o2.getModel());
+                    case "license_plate":
+                        return o1.getLicensePlate().compareToIgnoreCase(o2.getLicensePlate());
+                    default:
+                        return String.valueOf(o1.getId()).compareTo(String.valueOf(o2.getId()));
+                }
+            }
+        });
         bikeArrayAdapter.notifyDataSetChanged();
     }
 
@@ -86,6 +149,27 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
         getMenuInflater().inflate(R.menu.listview_menu, menu);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.order_by_default_item:
+                orderBy("");
+                return true;
+            case R.id.order_by_brand_item:
+                orderBy("brand");
+                return true;
+            case R.id.order_by_model_item:
+                orderBy("model");
+                return true;
+            case R.id.order_by_license_plate_item:
+                orderBy("license_plate");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

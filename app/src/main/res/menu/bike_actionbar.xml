@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/app_bar_bike_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"></item>
+
+    <item
+        android:id="@+id/order_by_default_item"
+        android:title="Ordenar por:" />
+
+    <item
+        android:id="@+id/order_by_brand_item"
+        android:title="marca" />
+
+    <item
+        android:id="@+id/order_by_model_item"
+        android:title="modelo" />
+
+    <item
+        android:id="@+id/order_by_license_plate_item"
+        android:title="matricula" />
+
+</menu>

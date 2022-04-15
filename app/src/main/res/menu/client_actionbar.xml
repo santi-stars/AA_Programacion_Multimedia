@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/app_bar_client_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"></item>
+
+
+    <item
+        android:id="@+id/order_by_default_item"
+        android:title="Ordenar por:" />
+
+    <item
+        android:id="@+id/order_by_name_item"
+        android:title="nombre" />
+
+    <item
+        android:id="@+id/order_by_surname_item"
+        android:title="apellido" />
+
+    <item
+        android:id="@+id/order_by_dni_item"
+        android:title="DNI" />
+
+</menu>
