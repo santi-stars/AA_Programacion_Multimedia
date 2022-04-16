@@ -28,8 +28,8 @@ public interface ClientDao {
     @Query("SELECT * FROM client WHERE dni LIKE :query")
     List<Client> getByDniString(String query);
 
-    @Query("SELECT * FROM client WHERE id = :id :query")
-    List<Client> getByNameClientOrderString(String query);
+    //@Query("SELECT * FROM client WHERE id = :id :query")
+    //List<Client> getByNameClientOrderString(String query);
 
     @Insert
     void insert(Client client);

@@ -2,6 +2,7 @@ package com.svalero.gestitaller.domain;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -24,6 +25,7 @@ public class Order implements Comparable<Order> {
     @ColumnInfo
     private String description;
 
+    @Ignore
     public Order() {
     }
 

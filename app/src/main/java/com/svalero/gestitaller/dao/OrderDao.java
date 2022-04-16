@@ -23,9 +23,6 @@ public interface OrderDao {
     @Query("SELECT * FROM `order` WHERE description LIKE :query")
     List<Order> getByDescriptionString(String query);
 
-    @Query("SELECT * FROM `order` WHERE dni LIKE :query")
-    List<Order> getByDniString(String query);
-
     @Insert
     void insert(Order order);
 

@@ -2,6 +2,7 @@ package com.svalero.gestitaller.domain;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Arrays;
@@ -22,9 +23,11 @@ public class Bike implements Comparable<Bike> {
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte[] bikeImage;
 
+    @Ignore
     public Bike() {
     }
 
+    @Ignore
     public Bike(Bike bike) {
         this.id = bike.getId();
         this.brand = bike.getBrand();
@@ -33,7 +36,6 @@ public class Bike implements Comparable<Bike> {
         this.clientId = bike.getClientId();
         this.bikeImage = bike.getBikeImage();
     }
-
 
 
     public Bike(int id, String brand, String model, String licensePlate, int clientId, byte[] bikeImage) {

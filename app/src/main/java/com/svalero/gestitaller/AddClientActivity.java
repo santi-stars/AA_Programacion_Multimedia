@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -33,10 +34,8 @@ import com.svalero.gestitaller.util.ImageUtils;
 public class AddClientActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private Client client;
-    private boolean vip = false;
     private GoogleMap map;
     private Marker marker;
-    private float[] clientPosition = {0, 0};
     private Switch vipSwitch;
     private ImageView clientImage;
     private EditText etName;
@@ -59,7 +58,7 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
         etDni = findViewById(R.id.dni_edittext_add_client);
         addButton = findViewById(R.id.add_client_button);
 
-        client = new Client(0, "", "", "", false, 0, 0, null);
+        client = new Client();
 
         // Permisos para la camara y almacenar en el dispositivo
         if (ContextCompat.checkSelfPermission(AddClientActivity.this,
@@ -93,18 +92,15 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
             client.setLatitude(intent.getFloatExtra("latitud", 0));
             client.setLongitude(intent.getFloatExtra("longitud", 0));
 
-            if (intent.getByteArrayExtra("client_image") != null) {
+            if (intent.getByteArrayExtra("client_image") != null)
                 clientImage.setImageBitmap(ImageUtils.getBitmap(intent.getByteArrayExtra("client_image")));
-            }
             etName.setText(intent.getStringExtra("name"));
             etSurname.setText(intent.getStringExtra("surname"));
             etDni.setText(intent.getStringExtra("dni"));
             vipSwitch.setChecked(intent.getBooleanExtra("vip", false));
 
             addButton.setText(R.string.modify_capital);
-        }/* else {
-            addButton.setText(R.string.add_button);
-        } */
+        }
     }
 
     public void addClient(View view) {
@@ -199,18 +195,19 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
         map = googleMap;    // Asignamos el mapa pasado por parámetro a nuestra variable de tipo GoogleMap
         googleMap.setOnMapClickListener(this);  // Establecemos un listener de click sencillo para el mapa
 
-        if (client.getLatitude() != 0 && client.getLongitude() != 0) {
-            onMapClick(new LatLng(client.getLatitude(), client.getLongitude()));
+        if (client.getLatitude() != 0 && client.getLongitude() != 0) {  // Si el cliente tiene ubicación
+            onMapClick(new LatLng(client.getLatitude(), client.getLongitude()));    // Pone un Marker
+            map.moveCamera(CameraUpdateFactory.newLatLng    // Centra la camara y asigna un zoom
+                    (new LatLng(client.getLatitude(), client.getLongitude())));
+            map.moveCamera(CameraUpdateFactory.zoomTo(11));
         }
     }
 
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
 
-        if (marker != null) {   // Si el marker NO está vacio,
+        if (marker != null)     // Si el marker NO está vacio,
             marker.remove();    // lo borramos para asignarle las coordenadas del click
-        }
-
         marker = map.addMarker(new MarkerOptions().position(latLng));
         client.setLatitude((float) latLng.latitude);    // Asignamos las coordenadas del marker a la
         client.setLongitude((float) latLng.longitude);   // dirección del cliente

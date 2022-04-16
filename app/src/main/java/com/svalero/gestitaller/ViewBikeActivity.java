@@ -34,7 +34,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
     public ArrayList<Bike> bikes;
     public BikeAdapter bikeArrayAdapter;
     private String orderBy;
-    private final String DEFAULT_STRING="";
+    private final String DEFAULT_STRING = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +151,11 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
+    /**
+     * Opciones del menú ActionBar
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

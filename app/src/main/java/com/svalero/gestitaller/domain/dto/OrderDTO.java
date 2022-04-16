@@ -1,5 +1,7 @@
 package com.svalero.gestitaller.domain.dto;
 
+import androidx.room.Ignore;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Objects;
@@ -14,6 +16,7 @@ public class OrderDTO implements Comparable {
     private byte[] bikeImageOrder;   // Bike
     private String description; // Order
 
+    @Ignore
     public OrderDTO() {
     }
 

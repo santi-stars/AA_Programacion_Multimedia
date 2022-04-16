@@ -26,6 +26,7 @@ import com.svalero.gestitaller.domain.Order;
 import com.svalero.gestitaller.util.DateUtils;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -113,8 +114,8 @@ public class AddOrderActivity extends AppCompatActivity {
 
         if (modifyOrder) {  // Si se edita una moto, obtiene sus datos y los pinta en el formulario
             order.setId(intent.getIntExtra("id", 0));
-            tvDate.setText(String.valueOf(DateUtils.fromMyDateFormatStringToLocalDate
-                    (intent.getStringExtra("date"))));
+            tvDate.setText(DateUtils.fromLocalDateToMyDateFormatString
+                    (LocalDate.parse(intent.getStringExtra("date"))));
             etDescription.setText(intent.getStringExtra("description"));
 
             addButton.setText(R.string.modify_capital);

@@ -16,6 +16,7 @@ import com.svalero.gestitaller.database.AppDatabase;
 import com.svalero.gestitaller.domain.Bike;
 import com.svalero.gestitaller.domain.Order;
 import com.svalero.gestitaller.domain.dto.OrderDTO;
+import com.svalero.gestitaller.util.DateUtils;
 import com.svalero.gestitaller.util.ImageUtils;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class OrderAdapter extends BaseAdapter {
         if (orderDTO.getBikeImageOrder() != null) {  // Valido si no es null la foto, si no sale fallo nullpoint...
             orderBikeImage.setImageBitmap(ImageUtils.getBitmap(orderDTO.getBikeImageOrder()));
         }
-        orderDateAndBikeModel.setText(orderDTO.getDate() + " || " + orderDTO.getBikeBrandModel());
+        orderDateAndBikeModel.setText(DateUtils.fromLocalDateToMyDateFormatString(orderDTO.getDate()) + " || " + orderDTO.getBikeBrandModel());
         orderLicensePlateAndDescription.setText(orderDTO.getBikeLicensePlate() + " || " + orderDTO.getDescription());
 
 
