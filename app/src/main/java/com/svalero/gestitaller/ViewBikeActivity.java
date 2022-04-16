@@ -15,8 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 
 import com.svalero.gestitaller.adapters.BikeAdapter;
 import com.svalero.gestitaller.adapters.ClientAdapter;
@@ -33,13 +35,19 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
     public ArrayList<Bike> bikes;
     public BikeAdapter bikeArrayAdapter;
+    public Spinner findSpinner;
     private String orderBy;
+    private final String[] FIND_SPINNER_OPTIONS = new String[]{"Marca", "Modelo", "Matricula"};
     private final String DEFAULT_STRING = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_bike);
+        findSpinner = findViewById(R.id.find_spinner_view_bike);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIND_SPINNER_OPTIONS);
+        findSpinner.setAdapter(adapterSpinner);
+
         bikes = new ArrayList<>();
         orderBy = DEFAULT_STRING;
 
@@ -98,16 +106,14 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
         if (query.equalsIgnoreCase(DEFAULT_STRING)) {
             bikes.addAll(db.bikeDao().getAll());
         } else {
-            // TODO spinner con las opciones para buscar
-            int j = 1;
-            switch (j) {
-                case 1:
+            switch (findSpinner.getSelectedItemPosition()) {
+                case 0:
                     bikes.addAll(db.bikeDao().getByBrandString("%" + query + "%"));
                     break;
-                case 2:
+                case 1:
                     bikes.addAll(db.bikeDao().getByModelString("%" + query + "%"));
                     break;
-                case 3:
+                case 2:
                     bikes.addAll(db.bikeDao().getByLicensePlateString("%" + query + "%"));
                     break;
             }
@@ -153,6 +159,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
 
     /**
      * Opciones del menú ActionBar
+     *
      * @param item
      * @return
      */

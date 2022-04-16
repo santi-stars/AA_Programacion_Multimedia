@@ -35,10 +35,8 @@ public class DateUtils {
      * @return String con formato (dd/MM/yyyy)
      */
     public static String fromLocalDateToMyDateFormatString(LocalDate localDate) {
-        Log.i("FECHA_localdate_param", String.valueOf(localDate));
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(MY_DATE_FORMAT);
-        String date = String.valueOf(localDate.format(dateTimeFormatter));
-        Log.i("FECHA_string", date);
-        return date;
+        String dateString = String.valueOf(localDate.format(dateTimeFormatter));
+        return dateString;
     }
 }

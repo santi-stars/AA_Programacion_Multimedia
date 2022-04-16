@@ -22,7 +22,6 @@ import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.util.ImageUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AddBikeActivity extends AppCompatActivity {
 
@@ -51,10 +50,9 @@ public class AddBikeActivity extends AppCompatActivity {
         clientSpinner = findViewById(R.id.client_spinner_add_bike);
         addButton = findViewById(R.id.add_bike_button);
 
-        bike = new Bike(0, "", "", "", 0, null);
-
+        bike = new Bike();
         clients = new ArrayList<>();
-        rellenarSpinner();
+        fillSpinner();
         intent();
     }
 
@@ -62,7 +60,7 @@ public class AddBikeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        rellenarSpinner();
+        fillSpinner();
     }
 
     private void intent() {
@@ -121,7 +119,7 @@ public class AddBikeActivity extends AppCompatActivity {
         }
     }
 
-    private void rellenarSpinner() {
+    private void fillSpinner() {
         // Llama a método que carga clientes de la base de datos
         clients.clear();
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
