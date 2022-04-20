@@ -1,47 +1,53 @@
 package com.svalero.gestitaller;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.room.Room;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import com.svalero.gestitaller.adapters.ClientAdapter;
 import com.svalero.gestitaller.database.AppDatabase;
 import com.svalero.gestitaller.domain.Client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class ViewClientActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class ViewClientActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, DetailFragment.closeDetails {
 
     public ArrayList<Client> clients;
     public ClientAdapter clientArrayAdapter;
     private String orderBy;
+    private FrameLayout frameLayout;
+    public Spinner findSpinner;
+    private final String[] FIND_SPINNER_OPTIONS = new String[]{"Nombre", "Apellido", "Dni"};
     private final String DEFAULT_STRING = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_client);
+
         clients = new ArrayList<>();
+        frameLayout = findViewById(R.id.frame_layout_client);
+        findSpinner = findViewById(R.id.find_spinner_view_client);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIND_SPINNER_OPTIONS);
+        findSpinner.setAdapter(adapterSpinner);
         orderBy = DEFAULT_STRING;
 
         clientList();
@@ -99,16 +105,14 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
         if (query.equalsIgnoreCase(DEFAULT_STRING)) {
             clients.addAll(db.clientDao().getAll());
         } else {
-            // TODO spinner con las opciones para buscar
-            int j = 1;
-            switch (j) {
-                case 1:
+            switch (findSpinner.getSelectedItemPosition()) {
+                case 0:
                     clients.addAll(db.clientDao().getByNameString("%" + query + "%"));
                     break;
-                case 2:
+                case 1:
                     clients.addAll(db.clientDao().getBySurnameString("%" + query + "%"));
                     break;
-                case 3:
+                case 2:
                     clients.addAll(db.clientDao().getByDniString("%" + query + "%"));
                     break;
             }
@@ -187,59 +191,34 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        final int itemSelected = info.position;
-
         switch (item.getItemId()) {
             case R.id.modify_menu:                      // Modificar cliente
-                Client client = clients.get(itemSelected);
+                Client client = clients.get(info.position);
+
                 intent.putExtra("modify_client", true);
-
-                Log.i("case_menu_id", String.valueOf(client.getId()));
                 intent.putExtra("id", client.getId());
-
-                Log.i("case_menu_imagen", Arrays.toString(client.getClientImage()));
                 intent.putExtra("client_image", client.getClientImage());
-
-                Log.i("case_menu_name", String.valueOf(client.getName()));
                 intent.putExtra("name", client.getName());
-
-                Log.i("case_menu_surname", String.valueOf(client.getSurname()));
                 intent.putExtra("surname", client.getSurname());
-
-                Log.i("case_menu_dni", String.valueOf(client.getDni()));
                 intent.putExtra("dni", client.getDni());
-
-                Log.i("case_menu_vip", String.valueOf(client.isVip()));
                 intent.putExtra("vip", client.isVip());
-
-                Log.i("case_menu_latitud", String.valueOf(client.getLatitude()));
                 intent.putExtra("latitud", client.getLatitude());
-
-                Log.i("case_menu_longitud", String.valueOf(client.getLongitude()));
                 intent.putExtra("longitud", client.getLongitude());
-
-                Log.i("client_intent", client.toString());
 
                 startActivity(intent);
                 return true;
-
             case R.id.detail_menu:                      // Detalles del cliente
-
-                // Todo FALTA usar un fragment para mostrar una ficha con los detalles del cliente
-
+                showDetails(info.position);
                 return true;
-
             case R.id.add_menu:                         // Añadir cliente
                 startActivity(intent);
                 return true;
-
             case R.id.delete_menu:                      // Eliminar cliente
                 deleteClient(info);
                 return true;
-
             default:
                 return super.onContextItemSelected(item);
-        }
+        }   // End switch
     }
 
     private void deleteClient(AdapterView.AdapterContextMenuInfo info) {
@@ -264,6 +243,30 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
         builder.create().show();
     }
 
+    private void showDetails(int position) {
+
+        Client client = clients.get(position);
+
+        Bundle datos = new Bundle();
+        datos.putByteArray("client_image", client.getClientImage());
+        datos.putString("name", client.getName());
+        datos.putString("surname", client.getSurname());
+        datos.putString("dni", client.getDni());
+        datos.putBoolean("vip", client.isVip());
+        datos.putFloat("latitude", client.getLatitude());
+        datos.putFloat("longitude", client.getLongitude());
+
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(datos);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.client_detail, detailFragment)
+                .commit();
+
+        frameLayout.setVisibility(View.VISIBLE);
+    }
+
     public void addClient(View view) {
         Intent intent = new Intent(this, AddClientActivity.class);
         startActivity(intent);
@@ -271,5 +274,11 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        showDetails(position);
+    }
+
+    @Override
+    public void hiddeDetails(){
+        frameLayout.setVisibility(View.GONE);
     }
 }

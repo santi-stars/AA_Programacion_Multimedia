@@ -7,7 +7,7 @@
     tools:context=".ViewClientActivity">
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,11 +20,71 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
+        <LinearLayout
+            android:id="@+id/LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.3">
+
+                <TextView
+                    android:id="@+id/find_textview_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Buscar por:"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.7">
+
+                <Spinner
+                    android:id="@+id/find_spinner_view_client"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="center_vertical"
+                    android:spinnerMode="dropdown" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
         <ListView
             android:id="@+id/client_lisview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/LinearLayout" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout_client"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="20dp"
+            android:visibility="gone">
+
+            <fragment
+                android:id="@+id/client_detail"
+                android:name="com.svalero.gestitaller.DetailFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical">
+
+            </fragment>
+        </FrameLayout>
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_client_floating_button"

@@ -8,7 +8,6 @@ import androidx.room.Room;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -16,9 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 
 import com.svalero.gestitaller.adapters.OrderAdapter;
 import com.svalero.gestitaller.database.AppDatabase;
@@ -26,30 +27,25 @@ import com.svalero.gestitaller.domain.Bike;
 import com.svalero.gestitaller.domain.Client;
 import com.svalero.gestitaller.domain.Order;
 import com.svalero.gestitaller.domain.dto.OrderDTO;
-import com.svalero.gestitaller.util.DateUtils;
-import com.svalero.gestitaller.util.ImageUtils;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
 public class ViewOrderActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, DetailFragment.closeDetails {
 
     public ArrayList<OrderDTO> ordersDTOArrayList;
     public ArrayList<Order> ordersArrayList;
-    public ArrayList<Bike> bikesArrayList;
-    public ArrayList<Client> clientsArrayList;
     public OrderAdapter orderDTOArrayAdapter;
     private OrderDTO orderDTO;
     private Bike bike;
     private Client client;
-    private Order order;
     private FrameLayout frameLayout;
     private String orderBy;
-    private final String DEFAULT_STRING = "";
     private AppDatabase dbBike, dbClient, dbOrder;
+    public Spinner findSpinner;
+    private final String[] FIND_SPINNER_OPTIONS = new String[]{"Fecha", "Cliente", "Moto", "Matrícula"};
+    private final String DEFAULT_STRING = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +56,10 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         client = new Client();
         ordersArrayList = new ArrayList<>();
         ordersDTOArrayList = new ArrayList<>();
-        frameLayout = findViewById(R.id.frame_layout);
+        frameLayout = findViewById(R.id.frame_layout_order);
+        findSpinner = findViewById(R.id.find_spinner_view_order);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FIND_SPINNER_OPTIONS);
+        findSpinner.setAdapter(adapterSpinner);
         orderBy = DEFAULT_STRING;
 
         dbBike = Room.databaseBuilder(getApplicationContext(),
@@ -129,23 +128,22 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         orderDTO = new OrderDTO();
         loadOrdersDTO();
 
-        String j = "date";    // TODO spinner con las opciones para buscar    COMPROBAR!!!
-        switch (j) {
-            case "date":
+        switch (findSpinner.getSelectedItemPosition()) {
+            case 0:
                 ordersDTOArrayList.removeIf
                         (orderDTO -> (!String.valueOf(orderDTO.getDate()).contains(query)));
                 break;
-            case "clien_name":
+            case 1:
                 ordersDTOArrayList.removeIf
-                        (orderDTO -> (!orderDTO.getClientNameSurname().contains(query)));
+                        (orderDTO -> (!orderDTO.getClientNameSurname().toLowerCase().contains(query.toLowerCase())));
                 break;
-            case "bike_model":
+            case 2:
                 ordersDTOArrayList.removeIf
-                        (orderDTO -> (!orderDTO.getBikeBrandModel().contains(query)));
+                        (orderDTO -> (!orderDTO.getBikeBrandModel().toLowerCase().contains(query.toLowerCase())));
                 break;
-            case "license_plate":
+            case 3:
                 ordersDTOArrayList.removeIf
-                        (orderDTO -> (!orderDTO.getBikeLicensePlate().contains(query)));
+                        (orderDTO -> (!orderDTO.getBikeLicensePlate().toLowerCase().contains(query.toLowerCase())));
                 break;
         }   // End switch
         orderBy(orderBy);
@@ -214,7 +212,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
     }
 
     /**
-     * Opciones del menú ActionBar
+     * Opciones del menú ActionBar "ordenar por:"
      *
      * @param item
      * @return
@@ -269,8 +267,6 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
         Intent intent = new Intent(this, AddOrderActivity.class);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        //final int itemSelected = ;
 
         switch (item.getItemId()) {
             case R.id.modify_menu:                      // Modificar moto

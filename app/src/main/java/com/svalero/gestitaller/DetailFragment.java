@@ -32,8 +32,10 @@ public class DetailFragment extends Fragment {
     private Client client;
     private OrderDTO orderDTO;
     private String activity;
-    private final String VIEW_BIKE_ACTIVITY = "???";
-    private final String VIEW_CLIENT_ACTIVITY = "??????";
+    private ImageView imageView;
+    private TextView textView1, textView2, textView3, textView4;
+    private final String VIEW_BIKE_ACTIVITY = "ViewBikeActivity";
+    private final String VIEW_CLIENT_ACTIVITY = "ViewClientActivity";
     private final String VIEW_ORDER_ACTIVITY = "ViewOrderActivity";
 
     public FloatingActionButton closeButton;
@@ -46,10 +48,16 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
         thisActivity = getActivity();
         if (thisActivity != null) {
-            Log.i("oncreate_thisActivity", thisActivity.toString());
             if (thisActivity.toString().contains(VIEW_BIKE_ACTIVITY)) {
                 bike = new Bike();
                 activity = VIEW_BIKE_ACTIVITY;
@@ -62,41 +70,13 @@ public class DetailFragment extends Fragment {
             }
         }
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.i("activity", thisActivity.toString());
-        View detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
-
-        switch (activity) {
-            case VIEW_BIKE_ACTIVITY:
-                // TODO crear un layout para cada fragment de detalles o borrar el swich
-            case VIEW_CLIENT_ACTIVITY:
-                // TODO crear un layout para cada fragment de detalles o borrar el swich
-            case VIEW_ORDER_ACTIVITY:
-                // detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
-                Log.i("oncreate_case_order", String.valueOf(getArguments() == null));
-                if (getArguments() != null) {
-                    orderDTO.setBikeImageOrder(getArguments().getByteArray("bike_image"));
-                    orderDTO.setDate(LocalDate.parse(getArguments().getString("date")));
-                    orderDTO.setClientNameSurname(getArguments().getString("name"));
-                    orderDTO.setBikeBrandModel(getArguments().getString("model"));
-                    orderDTO.setBikeLicensePlate(getArguments().getString("license"));
-                    orderDTO.setDescription(getArguments().getString("description"));
-                }
-                Log.i("oncreate_case_order", "orderDTO: " + orderDTO.toString());
-            default:
-                closeButton = detailView.findViewById(R.id.close_detail_button);
-                closeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        closeDetails.hiddeDetails();
-                    }
-                });
-        }   // End switch
+        closeButton = detailView.findViewById(R.id.close_detail_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeDetails.hiddeDetails();
+            }
+        });
 
         return detailView;
     }
@@ -104,29 +84,51 @@ public class DetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        imageView = view.findViewById(R.id.fragment_detail_imageview);
+        textView1 = view.findViewById(R.id.fragment_detail_textview1);
+        textView2 = view.findViewById(R.id.fragment_detail_textview2);
+        textView3 = view.findViewById(R.id.fragment_detail_textview3);
+        textView4 = view.findViewById(R.id.fragment_detail_textview4);
 
+        Log.i("oncreateview_thisActivity", thisActivity.toString());
+        Log.i("oncreateview_activity", activity);
         switch (activity) {
             case VIEW_BIKE_ACTIVITY:
-                // TODO crear un layout para cada fragment de detalles o borrar el swich
+                // TODO fragment de detalles de motos para otro dia
+                break;
             case VIEW_CLIENT_ACTIVITY:
-                // TODO crear un layout para cada fragment de detalles o borrar el swich
-            case VIEW_ORDER_ACTIVITY:
-                if (orderDTO.getBikeImageOrder() != null)
-                    ((ImageView) view.findViewById(R.id.order_detail_bike_imageview)).setImageBitmap
-                            (ImageUtils.getBitmap(orderDTO.getBikeImageOrder()));
-                if (orderDTO.getDate() != null) {
-                    ((TextView) view.findViewById(R.id.order_date_detail_textview)).setText
-                            (DateUtils.fromLocalDateToMyDateFormatString(orderDTO.getDate()));
+                if (getArguments() != null) {
+                    if (getArguments().getByteArray("client_image") != null)
+                        imageView.setImageBitmap
+                                (ImageUtils.getBitmap(getArguments().getByteArray("client_image")));
+                    textView1.setText(getArguments().getString("name") + " " + getArguments().getString("surname"));
+                    textView2.setText(getArguments().getString("dni"));
+                    if (getArguments().getBoolean("vip")) {
+                        textView3.setText(R.string.vip);
+                    } else {
+                        textView3.setText(R.string.no_vip);
+                    }
+                    //textView4.setVisibility(View.GONE);
                 }
-                ((TextView) view.findViewById(R.id.order_client_name_detail_textview)).setText(orderDTO.getClientNameSurname());
-                ((TextView) view.findViewById(R.id.order_bike_model_detail_textview)).setText(orderDTO.getBikeBrandModel() + " || " + orderDTO.getBikeLicensePlate());
-                ((TextView) view.findViewById(R.id.order_description_detail_textview)).setText(orderDTO.getDescription());
+                break;
+            case VIEW_ORDER_ACTIVITY:
+                if (getArguments() != null) {
+                    if (getArguments().getByteArray("bike_image") != null)
+                    imageView.setImageBitmap
+                            (ImageUtils.getBitmap(getArguments().getByteArray("bike_image")));
+                    textView1.setText(DateUtils.fromLocalDateToMyDateFormatString
+                            (LocalDate.parse(getArguments().getString("date"))));
+                    textView2.setText(getArguments().getString("name"));
+                    textView3.setText(getArguments().getString("model") + " || " + getArguments().getString("license"));
+                    textView4.setText(getArguments().getString("description"));
+                }
+                break;
         }   // End switch
-
     }
 
     /**
      * Interfaz para comunicar el boton de cerrar con la clase desde la que se llama al fragment
+     * sobreescribiendolo en esta
      */
     public interface closeDetails {
         void hiddeDetails();
