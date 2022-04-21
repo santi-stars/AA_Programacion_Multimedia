@@ -224,8 +224,8 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
     private void deleteClient(AdapterView.AdapterContextMenuInfo info) {
         Client client = clients.get(info.position);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("¿Estás seguro de eliminar el cliente para siempre?")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.are_you_sure_delete_client)
+                .setPositiveButton(R.string.yes_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
@@ -234,7 +234,7 @@ public class ViewClientActivity extends AppCompatActivity implements AdapterView
                         clientList();
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

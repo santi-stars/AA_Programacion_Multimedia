@@ -36,7 +36,6 @@ public class DateUtils {
      */
     public static String fromLocalDateToMyDateFormatString(LocalDate localDate) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(MY_DATE_FORMAT);
-        String dateString = String.valueOf(localDate.format(dateTimeFormatter));
-        return dateString;
+        return String.valueOf(localDate.format(dateTimeFormatter));
     }
 }

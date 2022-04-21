@@ -249,8 +249,8 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
     private void deleteBike(AdapterView.AdapterContextMenuInfo info) {
         Bike bike = bikes.get(info.position);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("¿Estás seguro de eliminar la moto para siempre?")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.are_you_sure_delete_bike)
+                .setPositiveButton(R.string.yes_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
@@ -259,7 +259,7 @@ public class ViewBikeActivity extends AppCompatActivity implements AdapterView.O
                         bikeList();
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

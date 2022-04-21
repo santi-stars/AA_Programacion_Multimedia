@@ -8,6 +8,7 @@
     <string name="name">Nombre</string>
     <string name="brand">Marca</string>
     <string name="model">Modelo</string>
+    <string name="client">Cliente</string>
     <string name="client_capital">CLIENTE</string>
     <string name="bike_capital">MOTO</string>
     <string name="order_capital">ORDEN</string>
@@ -16,10 +17,21 @@
     <string name="vip">Es VIP</string>
     <string name="description">Descripción</string>
     <string name="date">Fecha</string>
-    <string name="client">Cliente</string>
     <string name="bike">Moto</string>
     <string name="modify_capital">MODIFICAR</string>
     <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="are_you_sure_delete_order">¿Estás seguro de eliminar la orden para siempre?</string>
+    <string name="yes_capital">SI</string>
+    <string name="no_capital">NO</string>
+    <string name="are_you_sure_delete_client">¿Estás seguro de eliminar el cliente para siempre?</string>
+    <string name="are_you_sure_delete_bike">¿Estás seguro de eliminar la moto para siempre?</string>
+    <string name="added_order">Orden añadida</string>
+    <string name="modified_order">Orden modificada</string>
+    <string name="complete_all_fields">Completa todos los campos</string>
+    <string name="select_bike">Selecciona una moto</string>
+    <string name="added_client">Cliente añadido</string>
+    <string name="modified_client">Cliente modificado</string>
+    <string name="select_map_position">Selecciona una posición en el mapa</string>
+    <string name="added_bike">Moto añadida</string>
+    <string name="modified_bike">Moto modificada</string>
 </resources>

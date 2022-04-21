@@ -111,25 +111,23 @@ public class AddClientActivity extends AppCompatActivity implements OnMapReadyCa
         client.setClientImage(ImageUtils.fromImageViewToByteArray(clientImage));
 
         if ((client.getName().equals("")) || (client.getSurname().equals("")) || (client.getDni().equals(""))) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.complete_all_fields, Toast.LENGTH_SHORT).show();
         } else if (client.getLatitude() == 0 && client.getLongitude() == 0) {
-            Toast.makeText(this, "Selecciona una posición en el mapa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.select_map_position, Toast.LENGTH_SHORT).show();
         } else {
 
             AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "client").allowMainThreadQueries().build();
 
             if (modifyClient) {
-                Log.i("modifyed_client", client.toString());
                 modifyClient = false;
                 addButton.setText(R.string.add_button);
                 db.clientDao().update(client);
-                Toast.makeText(this, "Cliente modificado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.modified_client, Toast.LENGTH_SHORT).show();
             } else {
                 client.setId(0);
-                Log.i("new_client", client.toString());
                 db.clientDao().insert(client);
-                Toast.makeText(this, "Cliente añadido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.added_client, Toast.LENGTH_SHORT).show();
             }
 
             clientImage.setImageResource(R.drawable.ic_menu_camera);

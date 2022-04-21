@@ -128,9 +128,9 @@ public class AddOrderActivity extends AppCompatActivity {
         order.setDescription(etDescription.getText().toString().trim());
 
         if (bikeSpinner.getCount() == 0) {
-            Toast.makeText(this, "Selecciona una moto", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.select_bike, Toast.LENGTH_SHORT).show();
         } else if ((order.getDescription().equals("")) || (String.valueOf(order.getDate()).equals(""))) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.complete_all_fields, Toast.LENGTH_SHORT).show();
         } else {
             order.setClientId(clients.get(clientSpinner.getSelectedItemPosition()).getId());
             order.setBikeId(bikes.get(bikeSpinner.getSelectedItemPosition()).getId());
@@ -143,12 +143,12 @@ public class AddOrderActivity extends AppCompatActivity {
                 modifyOrder = false;
                 addButton.setText(R.string.add_button);
                 db.orderDao().update(order);
-                Toast.makeText(this, "Orden modificada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.modified_order, Toast.LENGTH_SHORT).show();
             } else {
                 order.setId(0);
                 Log.i("new_order", order.toString());
                 db.orderDao().insert(order);
-                Toast.makeText(this, "Orden añadida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.added_order, Toast.LENGTH_SHORT).show();
             }
 
             etDescription.setText("");

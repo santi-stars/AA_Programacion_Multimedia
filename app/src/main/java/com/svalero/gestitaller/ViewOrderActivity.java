@@ -9,7 +9,6 @@ import androidx.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +36,9 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
     public ArrayList<OrderDTO> ordersDTOArrayList;
     public ArrayList<Order> ordersArrayList;
     public OrderAdapter orderDTOArrayAdapter;
-    private OrderDTO orderDTO;
     private Bike bike;
     private Client client;
+    private OrderDTO orderDTO;
     private FrameLayout frameLayout;
     private String orderBy;
     private AppDatabase dbBike, dbClient, dbOrder;
@@ -158,26 +157,19 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
     private void orderBy(String orderBy) {
         this.orderBy = orderBy;
 
-        Log.i("findby_orderBy", "0");
         Collections.sort(ordersDTOArrayList, new Comparator<OrderDTO>() {
             @Override
             public int compare(OrderDTO o1, OrderDTO o2) {
-                Log.i("findby_orderBy", "0,5");
                 switch (orderBy) {
                     case "date":
-                        Log.i("findby_orderBy", "1");
                         return String.valueOf(o1.getDate()).compareToIgnoreCase(String.valueOf(o2.getDate()));
                     case "client_name":
-                        Log.i("findby_orderBy", "2");
                         return o1.getClientNameSurname().compareToIgnoreCase(o2.getClientNameSurname());
                     case "license_plate":
-                        Log.i("findby_orderBy", "3");
                         return o1.getBikeLicensePlate().compareToIgnoreCase(o2.getBikeLicensePlate());
                     case "bike_model":
-                        Log.i("findby_orderBy", "4");
                         return o1.getBikeBrandModel().compareToIgnoreCase(o2.getBikeBrandModel());
                     default:
-                        Log.i("findby_orderBy", "5");
                         return String.valueOf(o1.getId()).compareTo(String.valueOf(o2.getId()));
                 }   // End switch
             }
@@ -298,8 +290,8 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
     private void deleteOrder(AdapterView.AdapterContextMenuInfo info) {
         Order order = ordersArrayList.get(info.position);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("¿Estás seguro de eliminar la orden para siempre?")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.are_you_sure_delete_order)
+                .setPositiveButton(R.string.yes_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
@@ -308,7 +300,7 @@ public class ViewOrderActivity extends AppCompatActivity implements AdapterView.
                         orderList();
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no_capital, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

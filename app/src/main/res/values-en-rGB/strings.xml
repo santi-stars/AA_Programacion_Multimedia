@@ -8,7 +8,7 @@
     <string name="surname">Surname</string>
     <string name="name">Name</string>
     <string name="brand">Brand</string>
-    <string name="model">Mode</string>
+    <string name="model">Model</string>
     <string name="client_capital">CLIENT</string>
     <string name="bike_capital">BIKE</string>
     <string name="order_capital">ORDER</string>
@@ -21,4 +21,18 @@
     <string name="google_maps_key">AIzaSyAS-E1TdrFb9UU_Su4gaT7ZPcbypCwUsCE</string>
     <string name="vip">Is VIP</string>
     <string name="modify_capital">MODIFY</string>
+    <string name="are_you_sure_delete_order">Are you sure you want to delete the order forever?</string>
+    <string name="yes_capital">YES</string>
+    <string name="no_capital">NO</string>
+    <string name="are_you_sure_delete_client">Are you sure you want to delete the client forever?</string>
+    <string name="are_you_sure_delete_bike">Are you sure you want to delete the bike forever?</string>
+    <string name="added_order">Added order</string>
+    <string name="modified_order">Modified order</string>
+    <string name="complete_all_fields">Complete all the fields</string>
+    <string name="select_bike">Select a bike</string>
+    <string name="added_client">Added client</string>
+    <string name="modified_client">Modified client</string>
+    <string name="select_map_position">Select a position on the map</string>
+    <string name="added_bike">Moto añadida</string>
+    <string name="modified_bike">Moto modificada</string>
 </resources>

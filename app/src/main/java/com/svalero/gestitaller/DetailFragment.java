@@ -27,13 +27,7 @@ import java.time.LocalDate;
 public class DetailFragment extends Fragment {
 
     private closeDetails closeDetails;
-    private Activity thisActivity;
-    private Bike bike;
-    private Client client;
-    private OrderDTO orderDTO;
     private String activity;
-    private ImageView imageView;
-    private TextView textView1, textView2, textView3, textView4;
     private final String VIEW_BIKE_ACTIVITY = "ViewBikeActivity";
     private final String VIEW_CLIENT_ACTIVITY = "ViewClientActivity";
     private final String VIEW_ORDER_ACTIVITY = "ViewOrderActivity";
@@ -43,7 +37,6 @@ public class DetailFragment extends Fragment {
     public DetailFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,16 +49,13 @@ public class DetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View detailView = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
-        thisActivity = getActivity();
+        Activity thisActivity = getActivity();
         if (thisActivity != null) {
             if (thisActivity.toString().contains(VIEW_BIKE_ACTIVITY)) {
-                bike = new Bike();
                 activity = VIEW_BIKE_ACTIVITY;
             } else if (thisActivity.toString().contains(VIEW_CLIENT_ACTIVITY)) {
-                client = new Client();
                 activity = VIEW_CLIENT_ACTIVITY;
             } else if (thisActivity.toString().contains(VIEW_ORDER_ACTIVITY)) {
-                orderDTO = new OrderDTO();
                 activity = VIEW_ORDER_ACTIVITY;
             }
         }
@@ -84,17 +74,14 @@ public class DetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imageView = view.findViewById(R.id.fragment_detail_imageview);
-        textView1 = view.findViewById(R.id.fragment_detail_textview1);
-        textView2 = view.findViewById(R.id.fragment_detail_textview2);
-        textView3 = view.findViewById(R.id.fragment_detail_textview3);
-        textView4 = view.findViewById(R.id.fragment_detail_textview4);
+        ImageView imageView = view.findViewById(R.id.fragment_detail_imageview);
+        TextView textView1 = view.findViewById(R.id.fragment_detail_textview1);
+        TextView textView2 = view.findViewById(R.id.fragment_detail_textview2);
+        TextView textView3 = view.findViewById(R.id.fragment_detail_textview3);
+        TextView textView4 = view.findViewById(R.id.fragment_detail_textview4);
 
-        Log.i("oncreateview_thisActivity", thisActivity.toString());
-        Log.i("oncreateview_activity", activity);
         switch (activity) {
-            case VIEW_BIKE_ACTIVITY:
-                // TODO fragment de detalles de motos para otro dia
+            case VIEW_BIKE_ACTIVITY:    // TODO fragment de detalles de motos para otro dia
                 break;
             case VIEW_CLIENT_ACTIVITY:
                 if (getArguments() != null) {
@@ -108,14 +95,13 @@ public class DetailFragment extends Fragment {
                     } else {
                         textView3.setText(R.string.no_vip);
                     }
-                    //textView4.setVisibility(View.GONE);
                 }
                 break;
             case VIEW_ORDER_ACTIVITY:
                 if (getArguments() != null) {
                     if (getArguments().getByteArray("bike_image") != null)
-                    imageView.setImageBitmap
-                            (ImageUtils.getBitmap(getArguments().getByteArray("bike_image")));
+                        imageView.setImageBitmap
+                                (ImageUtils.getBitmap(getArguments().getByteArray("bike_image")));
                     textView1.setText(DateUtils.fromLocalDateToMyDateFormatString
                             (LocalDate.parse(getArguments().getString("date"))));
                     textView2.setText(getArguments().getString("name"));

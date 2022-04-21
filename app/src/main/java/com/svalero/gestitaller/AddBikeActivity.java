@@ -92,23 +92,21 @@ public class AddBikeActivity extends AppCompatActivity {
         bike.setBikeImage(ImageUtils.fromImageViewToByteArray(bikeImage));
 
         if ((bike.getBrand().equals("")) || (bike.getModel().equals("")) || (bike.getLicensePlate().equals(""))) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.complete_all_fields, Toast.LENGTH_SHORT).show();
         } else {
 
             AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "bike").allowMainThreadQueries().build();
 
             if (modifyBike) {
-                Log.i("modifyed_bike", bike.toString());
                 modifyBike = false;
                 addButton.setText(R.string.add_button);
                 db.bikeDao().update(bike);
-                Toast.makeText(this, "Moto modificada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.modified_bike, Toast.LENGTH_SHORT).show();
             } else {
                 bike.setId(0);
-                Log.i("new_bike", bike.toString());
                 db.bikeDao().insert(bike);
-                Toast.makeText(this, "Moto añadida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.added_bike, Toast.LENGTH_SHORT).show();
             }
 
             bikeImage.setImageResource(R.drawable.ic_menu_camera);
@@ -132,7 +130,6 @@ public class AddBikeActivity extends AppCompatActivity {
         int i = 0;      // Rellena el spinner con el nombre y apellido de los clientes
         for (Client client : clients) {
             arraySpinner[i] = client.getName() + " " + client.getSurname();
-            Log.i("spinner", arraySpinner[i]);
             i++;
         }
 
